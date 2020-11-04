@@ -1,64 +1,69 @@
-import requests
+from _utilities_ import soup_validation
 import os.path
 import re
-
-from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
 
+from bs4 import BeautifulSoup
 
-def find_page_by_urls(domain, keywords, soup=None):
-    if soup is None:
-        response = requests.get(domain)
-        soup = BeautifulSoup(response.text, 'html.parser')
-    for word in keywords:
+
+def find_page_by_urls(domain, urls, soup=None):
+    """ 
+    domain: доменное имя (str)
+    urls: список из возможных url-ов (list)
+    soup: soup-объект для домена, чтобы не делать лишних запросов к серверу (Optional <soup>)
+
+    Найти страницу по url-шаблонам
+
+    return: None или найденная ссылка (str)
+    """
+    soup = soup_validation(domain, soup)
+    for word in urls:
         for link in soup.find_all('a', href=True):
-            if re.search(re.compile(word, re.I), link.get('href')):
-                return urljoin(domain, link.get('href'))
+            link = link.get('href')
+            if re.search(re.compile(word, re.I), link):
+                return urljoin(domain, link)
 
 
 def find_page_by_keywords(domain, keywords, soup=None):
-    if soup is None:
-        response = requests.get(domain)
-        soup = BeautifulSoup(response.text, 'html.parser')
+    """ 
+    domain: доменное имя (str)
+    keywords: список слов, содержащих возможное название страницы (list)
+    soup: soup-объект для домена, чтобы не делать лишних запросов к серверу (Optional <soup>)
+
+    Найти страницу по словам-шаблонам
+
+    return: None или найденная ссылка (str)
+    """
+    soup = soup_validation(domain, soup)
     for word in keywords:
         for link in soup.find_all('a', href=True):
             if re.search(re.compile(word, re.I), link.text):
                 return urljoin(domain, link.get('href'))
 
 
-def find_subpages(domain, path_to_search, soup=None):
+# ВНИМАНИЕ!!! Далее идет тестовый функционал.
+# Использовать его можно лишь в режиме разработчика и
+# крайне НЕ рекомендуется это делать, если Вы таковым не являетесь
+
+def find_all_pages(domain, url_to_search, soup=None):
+    """ 
+    domain: доменное имя (str)
+    path_to_search: содержит относительную ссылку, с которой нужно начинать поиск (str)
+    soup: soup-объект для домена, чтобы не делать лишних запросов к серверу (Optional <soup>)
+
+    Найти все подстраницы path_to_search на странице domain
+    (пример: для domain='domain.com/contacts/' и path_to_search='/contacts' функция вернет
+     список ['domain.com/contacts/filial1', 'domain.com/contacts/filial2', 'domain.com/contacts/other'])
+
+    return: None или все найденные ссылки (list)
+    """
     all_links = []
-    if soup is None:
-        response = requests.get(domain)
-        soup = BeautifulSoup(response.text, 'html.parser')
+    soup = soup_validation(domain, soup)
+
     for link in soup.find_all('a', href=True):
-        if re.findall(re.compile(path_to_search, re.I), link.get('href')) \
-        and link.get('href') != path_to_search and link.get('href').find('/en/') == -1:
-            all_links.append(urljoin(domain, link.get('href')))
-    if len(all_links):
+        link = link.get('href')
+        if re.findall(re.compile(url_to_search, re.I), link):
+            all_links.append(urljoin(domain, link))
+    if all_links:
         return list(set(all_links))
     return 
-
-
-def find_deep_contacts(contacts_link):
-    path = urlparse(contacts_link).path
-    while os.path.dirname(path) != '/':
-        path = os.path.dirname(path)
-
-    sublinks = find_subpages(contacts_link, path)
-    if sublinks:
-        main_contacts_sublinks = []
-        main_contacts_sublinks.append(''.join(contacts_link))
-        if len(sublinks) == 1:
-            main_contacts_sublinks.append(''.join(sublinks))
-        else:
-            main_contacts_sublinks = [i for i in sublinks if i]
-
-        all_contacts_sublinks = main_contacts_sublinks.copy()
-
-        for contact_domain in main_contacts_sublinks:
-            path = urlparse(contact_domain).path
-            subpages = find_subpages(contact_domain, path)
-            if subpages:
-                all_contacts_sublinks += subpages
-    return all_contacts_sublinks

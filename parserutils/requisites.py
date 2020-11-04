@@ -1,4 +1,4 @@
-import requests
+from _utilities_ import get_request
 import re
 
 from bs4 import BeautifulSoup
@@ -13,9 +13,14 @@ r'[Рр]{1}асч[её]{1}тный сч[её]{1}т[\s\:0-9]+',
 
 
 def find_requisites(domain):
+    """
+    domain: доменное имя страницы (str)
+
+    return: реквизиты на данной странице (list)
+    """
     print("Finding requisites...")
     requisites_list = []
-    response = requests.get(domain)
+    response = get_request(domain)
     soup = BeautifulSoup(response.text, 'html.parser')
     for word in REQUISITES_KEYWORDS:
         regex_result = re.search(re.compile(word), response.text)

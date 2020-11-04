@@ -1,37 +1,49 @@
-import requests
+from _utilities_ import tag_visible, get_request
 
 from bs4 import BeautifulSoup
-from bs4.element import Comment
 
 
-def tag_visible(element):
-    if element.parent.name in ['style', 'script', 'head', 'title', 'meta', '[document]']:
-        return False
-    if isinstance(element, Comment):
-        return False
-    return True
+def get_description(element):
+    """
+    element: soup-объект, содержащий весь текст страницы (<soup>)
 
+    Метод просматривает мета-теги страницы, находя в них описание
 
-def get_description(html):
+    return: мета-описание страницы (str)
+    """
     description = None
-    if html.find("meta", property="description"):
-        description = html.find("meta", property="description").get('content')
-    elif html.find("meta", property="og:description"):
-        description = html.find("meta", property="og:description").get('content')
-    elif html.find("meta", property="facebook:description"):
-        description = html.find("meta", property="facebook:description").get('content')
-    elif html.find("p"):
-        description = html.find("p").contents
+    if element.find("meta", property="description"):
+        description = element.find("meta", property="description").get('content')
+    elif element.find("meta", property="og:description"):
+        description = element.find("meta", property="og:description").get('content')
+    elif element.find("meta", property="facebook:description"):
+        description = element.find("meta", property="facebook:description").get('content')
+    elif element.find("p"):
+        description = element.find("p")
     return description
 
 
-def find_about(domain):
+def find_about(domain, ABOUT_MIN_DESC=150):
+    """
+    domain: доменное имя страницы "О компании" (str)
+
+    ABOUT_MIN_DESC: минимальная длина предполагаемого текста-описания (Optional str)
+
+    return: описание компании (str)
+    """
+
     print("Finding about page...")
-    response = requests.get(domain)
+
+    response = get_request(domain)
     soup = BeautifulSoup(response.text, 'html.parser')
+    description =  get_description(soup)
+    if description:
+        return str(description)
     texts = soup.findAll(text=True)
+    # Из всех текстов оставляем только те, что видны на странице
     visible_texts = filter(tag_visible, texts) 
-    for t in visible_texts:
-        if len(t.strip()) > 150:
-            return t.strip()
-    return get_description(soup)
+
+    for text in visible_texts:
+        if len(text.strip()) > ABOUT_MIN_DESC:
+            return text.strip()
+    return

@@ -1,0 +1,150 @@
+{
+    "start_time": "2020-11-04 23:28",
+    "main_link": "http://digitalaround.ru",
+    "company_name": "DigitalAround — интернет-маркетинговое агентство — продвижение, аудит, контекстная реклама",
+    "company_links": {
+        "contacts": "http://digitalaround.ru/contacts/",
+        "about": "http://digitalaround.ru/about/",
+        "vacancies": null,
+        "staff": "http://digitalaround.ru/about/our-team/"
+    },
+    "about": "Наша работа видна не в отчетах. Вы ощутите ее в росте вашей прибыли, повышении комфорта ведения бизнеса, в освободившемся времени, которое вы сможете уделить себе и своим близким.",
+    "vacancies": null,
+    "team": [
+        {
+            "name": "Сибрэ Вайэр",
+            "info": "",
+            "link": null,
+            "photo": null
+        },
+        {
+            "name": "Асель Жакупова",
+            "info": "Руководитель отдела SEO",
+            "link": null,
+            "photo": "https://digitalaround.ru/wp-content/uploads/%D0%B0%D1%81%D0%B5%D0%BB%D1%8C.jpg"
+        },
+        {
+            "name": "Максим Днепровский",
+            "info": "Аккаунт-менеджер Почти мгновенно решит любой вопрос партнера. Находится в тех. отделе, для коммуникации со специалистами.",
+            "link": null,
+            "photo": "https://digitalaround.ru/wp-content/uploads/%D0%BC%D0%B0%D0%BA%D1%81.jpg"
+        },
+        {
+            "name": "Дмитрий Блащук",
+            "info": "SMM-специалист Не приступает к работе, не составив Customer Journey Map. Поэтому знает вашего клиента и в доступной форме дает аудитории то, что актуально на сегодняшний день.",
+            "link": null,
+            "photo": "https://digitalaround.ru/wp-content/uploads/%D0%94%D0%B8%D0%BC%D0%B0%D1%81.jpg"
+        },
+        {
+            "name": "Константин Гордеев",
+            "info": "Web-разработчик Высококлассный специалист по продуктам Bitrix",
+            "link": null,
+            "photo": "https://digitalaround.ru/wp-content/uploads/gordeev.jpg"
+        },
+        {
+            "name": "Александр Зейдлиц",
+            "info": "Программист Молодой талант, всегда что-то кодит, придумывает новое и интегрирует в действующие проекты.",
+            "link": null,
+            "photo": "https://digitalaround.ru/wp-content/uploads/%D0%A1%D0%B0%D0%BD%D1%8F.jpg"
+        },
+        {
+            "name": "Дмитрий Назаренко",
+            "info": "Веб-дизайнер Профи с большим опытом в UI/UX дизайне. Человек, который не упустит ни одного пикселя. В свободное от проектов время любит погонять на горных лыжах.",
+            "link": null,
+            "photo": "https://digitalaround.ru/wp-content/uploads/IMG_1384.jpg"
+        },
+        {
+            "name": "Маргарита Сухих",
+            "info": "Директолог",
+            "link": null,
+            "photo": "https://digitalaround.ru/wp-content/uploads/2020/01/Rita.jpg"
+        },
+        {
+            "name": "Анастасия Кодолич",
+            "info": "Аккаунт-менеджер",
+            "link": null,
+            "photo": "https://digitalaround.ru/wp-content/uploads/2017/06/photo_2020-09-14_16-10-04-e1600078283576.jpg"
+        },
+        {
+            "name": "Данил Бабинцев",
+            "info": "SEO-специалист",
+            "link": null,
+            "photo": "https://digitalaround.ru/wp-content/uploads/2020/01/Danil.jpg"
+        },
+        {
+            "name": "Евгения Сидорова",
+            "info": "Аккаунт-менеджер",
+            "link": null,
+            "photo": "https://digitalaround.ru/wp-content/uploads/2020/07/%D0%96%D0%B5%D0%BD%D1%8F-1.jpg"
+        },
+        {
+            "name": "Андрей Мартын",
+            "info": "SEO-специалист",
+            "link": null,
+            "photo": "https://digitalaround.ru/wp-content/uploads/2020/07/%D0%B0%D0%BD%D0%B4%D1%80%D0%B5%D0%B9.jpg"
+        },
+        {
+            "name": "Никита Исаков",
+            "info": "Программист",
+            "link": null,
+            "photo": "https://digitalaround.ru/wp-content/uploads/2020/07/photo_2020-07-06_10-48-48.jpg"
+        },
+        {
+            "name": "Ульяна Быкова",
+            "info": "SEO-специалист",
+            "link": null,
+            "photo": "https://digitalaround.ru/wp-content/uploads/2016/07/%D0%A3%D0%BB%D1%8F_2-1.jpg"
+        },
+        {
+            "name": "Александр Меньшиков",
+            "info": "Руководитель отдела продаж",
+            "link": null,
+            "photo": "https://digitalaround.ru/wp-content/uploads/2020/01/Sanya.jpg"
+        },
+        {
+            "name": "Илья Емельяненко",
+            "info": "Технический директор Гуру интернет-маркетинга и стратегии привлечения клиентов.",
+            "link": null,
+            "photo": "https://digitalaround.ru/wp-content/uploads/2018/10/emelyanenko.png"
+        },
+        {
+            "name": "Сергей Сергеев",
+            "info": "Финансовый директор Поможет выбрать самый рентабельный вектор маркетинга в вашей нише, опираясь на цифры и реальные показатели. Перфекционист. Аналитик. Гуру Excel и Битрикс24. Автоматизирует бизнес.",
+            "link": null,
+            "photo": "https://digitalaround.ru/wp-content/uploads/%D0%90%D0%B2%D0%B0.jpg"
+        },
+        {
+            "name": "Родион Лонкин",
+            "info": "Директор по развитию Стратег. Предприниматель до мозга костей. Ведет нас вперед и участвует в разработке стратегии развития каждого партнера.",
+            "link": null,
+            "photo": "https://digitalaround.ru/wp-content/uploads/%D1%80%D0%BE%D0%B4%D0%B8%D0%BE%D0%BD.jpg"
+        }
+    ],
+    "emails": {
+        "privet@digitalaround.ru": null,
+        "info@digital-around.com": null
+    },
+    "phones": {
+        "+79136154982": null,
+        "8 (800) 350-83-58": null,
+        "+78003508358": null,
+        "8(800)350-83-58": null,
+        "79136154982": null,
+        "83400236728": null
+    },
+    "social_networks": {
+        "facebook": "https://www.facebook.com/digita1around/",
+        "instagram": "https://www.instagram.com/digital.around/",
+        "vk.com": "https://vk.com/digitalaround"
+    },
+    "messengers": {
+        "viber": "79136154982",
+        "WhatsApp": "//wa.me/79136154982",
+        "skype": "skype:digital.around"
+    },
+    "requisites": [],
+    "address": [
+        "ул. Октябрьская 33/1, офис 304",
+        "ул. Красных Партизан, 194, офис 201"
+    ]
+}

@@ -1,16 +1,19 @@
-import requests
 import datetime
 
 from bs4 import BeautifulSoup
 
-from parserutils import emails, phones, social_networks, messengers, requisites, addresses, title, about, vacancies
-from linksfinder import find_page_by_keywords, find_page_by_urls, find_deep_contacts
+from _utilities_ import get_request
+from parserutils import emails, phones, social_networks, \
+                        messengers, requisites, addresses, \
+                        title, team, about, vacancies
+from linksfinder import find_page_by_keywords, find_all_pages, \
+                        find_page_by_urls
 
 
 CONTACT_KEYWORDS = ['контакты', 'контактн']
 CONTACT_URLS = ['contact', 'kontakty', 'kontakti']
 
-TEAM_KEYWORDS = ['команда', 'сотрудники', 'коллектив', 'персонал']
+TEAM_KEYWORDS = ['команда', 'сотрудники', 'коллектив']
 TEAM_URLS = ['staff', 'personal']
 
 ABOUT_KEYWORDS = ['об учреждении', 'о компании', 'о нас']
@@ -21,22 +24,40 @@ VACANCY_URLS = ['vacanc', 'vakans']
 
 
 def parse_driver(domain, callback):
-    temp_list = list()
+    """
+    domain: страница, к которой будет применена функция парсера (str)
+    callback: функция по нахождению элемента страницы (def)
+
+    Диспетчер, вызывающий определенную функцию
+
+    return: информация, которую нашла функция парсера (dict, list, str)
+    """
     founded_info = callback(domain)
-    if founded_info not in [None, {}, ''] and founded_info not in temp_list:
-        temp_list.append(founded_info)
-    return temp_list
+    if founded_info not in [None, {}, '']:
+        return founded_info
+    return
 
 
 def parse(domain, deep_test=False):
+    """
+    domain: основная страница для всего парсера (str)
+    deep_test: режим разработчика (Optional bool)
+
+    Основная функция, вызываемая в мэйне, которая, в свою очередь,
+    поочередно вызывает все возможные методы парсера и складывает 
+    результат в словарь
+
+    return: вся информация, полученная парсером (dict)
+    """
     if domain[:4] != "http":
         domain = "http://" + domain
     if domain[-1] == '/':
         domain = domain[:-1]
+    # Приведение url к виду http://domain.com
 
     print("Start parsing {}...".format(domain))
 
-    item = dict()
+    result = dict()
 
     DRIVE_ARGS = [
                   ('emails', emails.find_emails),
@@ -47,40 +68,49 @@ def parse(domain, deep_test=False):
                   ('address', addresses.find_address),
                  ]
 
-    response = requests.get(domain)
+    response = get_request(domain)
+    if not response:
+        exit()
     soup = BeautifulSoup(response.text, 'lxml')
 
-    item['start_time'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
-    item['main_link'] = domain
-    item['company_name'] = title.get_title(soup)
+    result['start_time'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
+    result['main_link'] = domain
+    result['company_name'] = title.get_title(soup)
     
-    item['company_links'] = list()
+    result['company_links'] = list()
 
     contacts_link = find_page_by_urls(domain, CONTACT_URLS, soup)
-    if not contacts_link or not addresses.find_address(contacts_link):
+    # Костыль: если нашли первый попавшийся url, не содержащий адреса и почты,
+    # но содержащий слово kontakt, это может быть не страница контактов, а нечто похожее
+    # (пример: domain.com/kontakntie-usiliteli). Тогда ищем по ключевым словам в меню
+    if not contacts_link or (not addresses.find_address(contacts_link) 
+                             and emails.find_emails(contacts_link)):
         contacts_link = find_page_by_keywords(domain, CONTACT_KEYWORDS, soup)
 
+    # Тестовый режим
     if deep_test:
-        contacts_link = find_deep_contacts(contacts_link)
+        contacts_links = find_all_pages(find_all_pages)
+        print(contacts_links)
 
     about_link = find_page_by_keywords(domain, ABOUT_KEYWORDS, soup)
     if not about_link:
         about_link = find_page_by_urls(domain, ABOUT_URLS, soup)
 
     if not about_link:
-        item['about'] = None
+        result['about'] = None
     else:
-        item['about'] = parse_driver(about_link, about.find_about)
+        result['about'] = parse_driver(about_link, about.find_about)
 
     vacancy_link = find_page_by_keywords(contacts_link, VACANCY_KEYWORDS, soup)
     if not vacancy_link:
         vacancy_link = find_page_by_urls(contacts_link, VACANCY_URLS, soup)
 
     if not vacancy_link:
-        item['vacancy'] = None
+        result['vacancies'] = None
     else:
-        item['vacancy'] = parse_driver(vacancy_link, vacancies.find_vacancy)
+        result['vacancies'] = parse_driver(vacancy_link, vacancies.find_vacancy)
 
+    # Переходы к странице "Наша команда" ищем везде где можно и по чему можно
     team_link = find_page_by_keywords(domain, TEAM_KEYWORDS, soup)
     if not team_link:
         team_link = find_page_by_keywords(contacts_link, TEAM_KEYWORDS, soup)
@@ -90,38 +120,23 @@ def parse(domain, deep_test=False):
         team_link = find_page_by_urls(domain, TEAM_URLS, soup)
 
     if not team_link:
-        item['team'] = None
+        result['team'] = None
     else:
-        item['team'] = parse_driver(team_link, find_team)
+        result['team'] = parse_driver(team_link, team.find_team)
     
+    # Если нашли страницу с контактами, то парсим контакты же по ней
     if contacts_link:
         for args in DRIVE_ARGS:
-            item[args[0]] = parse_driver(contacts_link, args[1])
-        '''
-        if type(contacts_link) == str:
-            for args in DRIVE_ARGS:
-                item[args[0]] = parse_driver(contacts_link, args[1])
-        else:
-            for args in drive_args:
-                response_list = []
-                for page in contacts_link:
-                    response = parse_driver(page, args[1])
-                    if response and response not in response_list:
-                        response_list.append(response)
-                response_list = [item for response_list in l for item in response_list]
-                item[args[0]] = [i for i in response_list if i]
-        '''
+            result[args[0]] = parse_driver(contacts_link, args[1])
     else:
+    # ...Или пытаемся вытащить что-то прямо с главной
         for args in DRIVE_ARGS:
-            item[args[0]] = parse_driver(domain, args[1])
+            result[args[0]] = parse_driver(domain, args[1])
 
-    item['company_links'] = {
+    result['company_links'] = {
                              'contacts': contacts_link,
                              'about': about_link,
                              'vacancies': vacancy_link,
                              'staff': team_link
                             }
-    return item
-
-#parsed_data = parse('cornerstone.ru')
-#pprint.pprint(parsed_data, indent = 4, width = 200)
+    return result
