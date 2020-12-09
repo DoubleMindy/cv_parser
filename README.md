@@ -38,19 +38,20 @@
 
 ## ИСПОЛЬЗОВАНИЕ:
 
-> python cv_parser.py <yourdomain> [-p|--path <example/example1.json>] [-t|--test]
+```bash
+python cv_parser.py <yourdomain> [-p|--path <example/example1.json>] [-t|--test]
+```
 
 *-p*: позволяет сохранить файл с результатом парсера в папку, указанную в аргументе
 
 *-t*: режим разработчика (не рекомендуется использовать!)
 
 Примеры JSON-файлов с выгруженными результатами находятся в папке examples:
-
->python cv_parser.py aeroem.ru -p examples/example1.json
-
->python cv_parser.py 2050.digital -p examples/example2.json
-
->python cv_parser.py digitalaround.ru -p examples/example3.json
+```bash
+python cv_parser.py aeroem.ru -p examples/example1.json
+python cv_parser.py 2050.digital -p examples/example2.json
+python cv_parser.py digitalaround.ru -p examples/example3.json
+```
 
 ## ЧТО НЕОБХОДИМО ДОДЕЛАТЬ:
 
